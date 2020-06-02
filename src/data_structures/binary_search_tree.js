@@ -63,7 +63,62 @@ class BinarySearchTree {
   }
 
   delete(key) {
-    // TODO (tests first!)
+    let node = this._root;
+    let parent;
+    while (node) {
+      if (key < node.key) {
+        node = node.left;
+      } else if (key > node.key) {
+        node = node.right;
+      } else {
+        parent = node.parent;
+        break;
+      }
+    }
+
+    if (!node) {
+      return undefined;
+    }
+    let replacement;
+
+    if (node.left && node.right) {
+      let successor = node.right;
+      
+      if (successor.left) {
+        while (successor.left) {
+          successor = successor.left;
+        }
+        successor.parent.left = successor.right;
+        if (successor.right) {
+          successor.right.parent = successor.parent;
+        }
+        successor.right = node.right;
+        node.right.parent = successor;
+      }
+
+      successor.left = node.left;
+      successor.left.parent = successor;
+
+      replacement = successor;
+
+    } else {
+      replacement = node.left ? node.left : node.right;
+    }
+
+
+    if (parent) {
+      const direction = node === parent.left ? 'left' : 'right';
+      parent[direction] = replacement;
+    } else {
+      this._root = replacement;
+    }
+
+    if (replacement) {
+      replacement.parent = parent;
+    }
+
+    this._count -= 1;
+    return node.value;
   }
 
   count() {
