@@ -103,24 +103,48 @@ dataStructures.forEach(TargetDS => {
     });
 
     describe('delete', () => {
-      it('returns the value for the removed record', () => {
+      let records;
+      beforeEach(() => {
+        records = [
+          { key: 'one', value: 'first' },
+          { key: 'two', value: 'second' },
+          { key: 'three', value: 'third' },
+          { key: 'four', value: 'fourth' },
+          { key: 'five', value: 'fifth' },
+        ];
 
+        records.forEach(({ key, value }) => {
+          bst.insert(key, value);
+        });
+      });
+
+      it('returns the value for the removed record', () => {
+        const result = bst.delete('one');
+        expect(result).toEqual('first');
       });
 
       it('returns undefined if the record was not found', () => {
-
+        const result = bst.delete('seven');
+        expect(result).toEqual(undefined);
       });
 
       it('reduces the count by 1', () => {
-
+        bst.delete('one');
+        expect(bst.count()).toBe(4);
       });
 
       it('omits the removed record from iteration results', () => {
+        const cb = jest.fn();
+        bst.forEach(cb);
 
+        const calls = cb.mock.calls
+        expect(calls.length).toBe(records.length - 1)
       });
 
       it('can remove every element in a tree', () => {
-
+        records.forEach(({ key, value }) => {
+          expect(bst.delete(key)).toBe(value);
+        });
       });
 
       describe('scenarios', () => {
