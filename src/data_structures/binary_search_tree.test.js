@@ -134,6 +134,7 @@ dataStructures.forEach(TargetDS => {
       });
 
       it('omits the removed record from iteration results', () => {
+        bst.delete('one');
         const cb = jest.fn();
         bst.forEach(cb);
 
